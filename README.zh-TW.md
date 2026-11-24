@@ -180,3 +180,7 @@ docker compose -p nutrition-restore run --rm app --db-info
 - [環境紀錄](docs/verification/environment.md)
 
 兩份 README 採相同架構、指令與結果數字；功能或結果改變時應同步更新。詳細連結文件可能保留原本語言。
+
+## 簡報網頁展示
+
+共用的 FastAPI 網頁展示及離線測試、真實模型測試步驟，請見 [docs/web-demo.md](docs/web-demo.md)。展示使用專用的合成資料庫 schema，預設停用模型呼叫。

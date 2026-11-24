@@ -180,3 +180,7 @@ The implementation, fixes, and both formal reports are on `main`. A cloud interf
 - [Environment record](docs/verification/environment.md)
 
 The two README versions share the same structure, commands, and result figures. Update both when features or results change. Detailed linked documents may retain their original language.
+
+## Presentation web demo
+
+The shared FastAPI web demo and its offline/real-model test steps are documented in [docs/web-demo.md](docs/web-demo.md). It uses a dedicated synthetic database schema and disables model calls by default.
