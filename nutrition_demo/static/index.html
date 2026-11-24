@@ -1,9 +1,133 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nutrition Agent · Live demo</title><link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" defer></script></head>
-<body><header><div><span class="eyebrow">PRESENTATION WORKSPACE</span><h1>Nutrition Agent</h1><p>Plan meals. Track what you ate. Review every correction.</p></div><span class="badge">Synthetic data only</span></header>
-<main><section class="conversation"><div class="section-title"><h2>Shared conversation</h2><span id="mode" class="badge">Connecting…</span></div><p class="muted">Everyone sees the same conversation. An interaction code is required to send messages or approve changes.</p><div id="messages" role="log" aria-live="polite"><p class="empty">Start with a batch query, then try logging a meal and correcting its date.</p></div>
-<div id="preview" class="review" hidden><span class="eyebrow">REVIEW BEFORE SAVING</span><h3>Proposed changes</h3><pre id="preview-text"></pre><div class="actions"><button id="approve">Approve changes</button><button id="reject" class="secondary">Reject</button></div></div>
-<div id="proposal" class="review" hidden><h3>Recipe proposal</h3><p id="proposal-note"></p><button id="accept">Accept recipe</button></div>
-<div class="quick-actions"><button class="secondary" data-command="/batches">View batches</button><button class="secondary" data-command="/daily">Today’s meals</button><button class="secondary" data-command="/inventory">Inventory</button><button class="secondary" data-command="/new-plan">New plan</button><button class="secondary" data-command="/inventory-ok">Confirm inventory</button></div>
-<form id="compose"><label for="code">Interaction code</label><input id="code" type="password" autocomplete="off" placeholder="Enter the code shared by the presenter"><label for="message">Your message</label><textarea id="message" rows="3" maxlength="4000" placeholder="What did I eat today?"></textarea><div class="actions"><button id="send" type="submit">Send message</button><span id="status" role="status"></span></div></form>
-</section><aside><div class="section-title"><h2>Workspace records</h2><span id="stage" class="muted"></span></div><p class="muted">Records update after an operation completes.</p><details open><summary>Prepared batches</summary><pre id="batches">Loading…</pre></details><details open><summary>Today’s nutrition</summary><pre id="daily">Loading…</pre></details><details><summary>Ingredient inventory</summary><pre id="inventory">Loading…</pre></details><details class="presenter"><summary>Presenter controls</summary><label for="presenter-code">Presenter code</label><input id="presenter-code" type="password" autocomplete="off"><p class="muted">Reset replaces all shared chat and records with the synthetic starting scenario.</p><button id="reset" class="danger">Reset demo</button></details></aside></main><footer>Demonstration only · Nutrition values are synthetic · Shared messages are publicly visible</footer></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nutrition Agent · Live demo</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Nutrition Agent</h1>
+      <p>Plan meals, save prepared batches, and track what you eat.</p>
+    </div>
+    <span class="badge">Demo data</span>
+  </header>
+  <main>
+    <section class="conversation" aria-labelledby="conversation-title">
+      <div class="section-title">
+        <h2 id="conversation-title">Shared conversation</h2>
+        <span id="mode" class="badge">Connecting…</span>
+      </div>
+      <p class="muted">Messages are publicly visible. Use the interaction code to participate.</p>
+      <div id="messages" role="log" aria-live="polite">
+        <p class="empty">Check the ingredients on hand, then confirm inventory to start a plan.</p>
+      </div>
+
+      <section id="recipe-picker" class="review" hidden>
+        <h3>Choose a recipe</h3>
+        <div id="recipe-options" class="choices"></div>
+      </section>
+
+      <section id="adjustment" class="review" hidden>
+        <h3 id="selected-recipe"></h3>
+        <div id="adjustment-controls">
+          <form id="adjust-form" class="actions">
+            <div>
+              <label for="boxes">Boxes to make</label>
+              <input id="boxes" type="number" min="1" max="99" step="1" value="4" required>
+            </div>
+            <button id="adjust" type="submit">Adjust to my goals</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="proposal" class="review" hidden>
+        <h3 id="proposal-title">Recipe proposal</h3>
+        <p id="proposal-note"></p>
+        <div id="proposal-details"></div>
+        <div class="actions">
+          <button id="accept" type="button">Accept recipe</button>
+          <button id="purchase" type="button" hidden>Add 200 g chicken</button>
+          <button id="cook-plan" type="button" hidden>Used plan as written</button>
+        </div>
+        <p id="cooking-note" class="muted" hidden>
+          If you used different amounts or made a different number of boxes, tell the agent what you actually made.
+        </p>
+        <details id="recalculate" hidden>
+          <summary>Try fewer boxes</summary>
+          <div id="recalculate-controls"></div>
+        </details>
+      </section>
+
+      <section id="meal-choices" class="review" hidden>
+        <h3>Which batch did you eat from?</h3>
+        <div id="batch-options" class="choices"></div>
+      </section>
+
+      <section id="preview" class="review" hidden>
+        <h3 id="preview-title">Review changes</h3>
+        <pre id="preview-text"></pre>
+        <div class="actions">
+          <button id="approve" type="button">Approve changes</button>
+          <button id="reject" class="secondary" type="button">Reject</button>
+        </div>
+      </section>
+
+      <div class="quick-actions">
+        <button id="confirm-inventory" data-command="/inventory-ok" type="button" hidden>Confirm inventory</button>
+        <button id="new-plan" class="secondary" data-command="/new-plan" type="button" hidden>New plan</button>
+        <button class="secondary" data-command="/batches" type="button">View batches</button>
+        <button class="secondary" data-command="/daily" type="button">Today’s meals</button>
+        <button class="secondary" data-command="/inventory" type="button">Inventory</button>
+      </div>
+      <form id="compose">
+        <label for="code">Interaction code</label>
+        <input id="code" type="password" autocomplete="off" placeholder="Enter the code shared by the presenter">
+        <label for="message">Your message</label>
+        <textarea id="message" rows="3" maxlength="4000" placeholder="I ate one box of curry chicken for lunch."></textarea>
+        <div class="actions">
+          <button id="send" type="submit">Send message</button>
+          <span id="status" role="status"></span>
+        </div>
+      </form>
+    </section>
+    <aside aria-labelledby="workspace-title">
+      <h2 id="workspace-title">Workspace</h2>
+      <section id="goals" class="goal-grid" aria-label="Nutrition goals" hidden>
+        <div class="goal-card">
+          <h3>Per-meal goals</h3>
+          <p class="muted">Used to adjust each box</p>
+          <dl id="meal-goals"></dl>
+        </div>
+        <div class="goal-card">
+          <h3>Daily goals</h3>
+          <p class="muted">Used to track meals logged today</p>
+          <dl id="daily-goals"></dl>
+        </div>
+      </section>
+      <details open>
+        <summary>Ingredients on hand</summary>
+        <pre id="inventory">Loading…</pre>
+      </details>
+      <details open>
+        <summary>Prepared batches</summary>
+        <pre id="batches">Loading…</pre>
+      </details>
+      <details open>
+        <summary>Today’s nutrition</summary>
+        <pre id="daily">Loading…</pre>
+      </details>
+      <details class="presenter">
+        <summary>Presenter controls</summary>
+        <label for="presenter-code">Presenter code</label>
+        <input id="presenter-code" type="password" autocomplete="off">
+        <p class="muted">Reset restores the starting ingredients and goals, and clears batches, meals, and chat.</p>
+        <button id="reset" class="danger" type="button">Reset demo</button>
+      </details>
+    </aside>
+  </main>
+</body>
+</html>

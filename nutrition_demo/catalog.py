@@ -103,8 +103,55 @@ class Catalog:
         return result
 
 
+    def _demo_curry_instructions(self, recipe, items, boxes):
+        quantities = {item['ingredient_id']: decimal(item['quantity']) for item in items}
+        quantities = {ingredient_id: quantity for ingredient_id, quantity in quantities.items() if quantity > 0}
+
+        def amount(ingredient_id):
+            return format(quantities[ingredient_id].normalize(), 'f') + ' ' + self.ingredient(ingredient_id)['unit']
+
+        def ingredient_list(ids):
+            return ' and '.join(f"{amount(i)} of {self.ingredient(i)['name'].lower()}" for i in ids if i in quantities)
+
+        water = quantities.get('water', Decimal(0))
+        roux = quantities.get('curry_block', Decimal(0))
+        curry_water = roux * decimal(recipe['demo_curry_water_ml_per_g_roux'])
+        rice_water = water - curry_water
+        if 'rice' not in quantities:
+            curry_water = water
+
+        steps = []
+        if 'rice' in quantities:
+            rice_liquid = f" with {rice_water.normalize():f} mL of water" if rice_water > 0 else ''
+            steps.append(f"Cook {amount('rice')} of dry white rice{rice_liquid}. Follow your rice cooker or package directions.")
+        if 'broccoli' in quantities:
+            steps.append(f"Roast {amount('broccoli')} of frozen broccoli separately until tender.")
+        steps.append('Chop the vegetables. Cut the raw chicken on a separate board.')
+        if 'oil' in quantities:
+            steps.append(f"Heat {amount('oil')} of olive oil in the curry pot.")
+        aromatics = ingredient_list(['onion', 'garlic'])
+        if aromatics:
+            order = ' Add the garlic last.' if 'onion' in quantities and 'garlic' in quantities else ''
+            steps.append(f"Sauté {aromatics}.{order}")
+        vegetables = ingredient_list(['potato', 'carrot', 'mushroom'])
+        if vegetables:
+            if curry_water > 0 and ('rice' not in quantities or rice_water > 0):
+                steps.append(f'Add {vegetables} and {curry_water.normalize():f} mL of water to the pot. Simmer until the vegetables begin to soften.')
+            else:
+                steps.append(f'Add {vegetables} to the pot. Confirm the water amounts before simmering.')
+        if 'chicken' in quantities:
+            steps.append(f"Add {amount('chicken')} of raw chicken breast. Simmer until the chicken reaches 165°F (74°C), measured with a food thermometer.")
+        if 'curry_block' in quantities:
+            steps.append(f"Take the pot off the heat and dissolve {amount('curry_block')} of curry roux. Return to low heat and stir until thickened.")
+        sides = ' and '.join(side for side in ('rice', 'broccoli') if side in quantities)
+        serving = f' with the {sides}' if sides else ''
+        steps.append(f'Divide the curry{serving} into {boxes} equal portions. Record the actual ingredients used and number of boxes made.')
+        return steps
+
     def customized_instructions(self,recipe_id,items,boxes):
         recipe=self.recipe(recipe_id)
+        if 'demo_curry_water_ml_per_g_roux' in recipe:
+            return self._demo_curry_instructions(recipe, items, boxes)
         by_id={i['ingredient_id']:i for i in items}
         def amount(id,divisor=1):
             i=by_id[id]

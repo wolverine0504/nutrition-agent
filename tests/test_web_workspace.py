@@ -37,6 +37,10 @@ def workspace(monkeypatch):
     monkeypatch.delenv('WEB_ENABLE_MODEL_CALLS', raising=False)
     ws = WebWorkspace.__new__(WebWorkspace)
     ws.store = FakeStore()
+    ws.workflow = Mock()
+    ws.workflow.selection_command.return_value = None
+    ws.meals = Mock()
+    ws.meals.recognizes.return_value = False
     ws.agent = Mock(return_value=SimpleNamespace(handle=Mock(return_value=Result(True, {'message': 'Done'}))))
     return ws
 
@@ -117,6 +121,22 @@ def test_public_receipt_excludes_raw_tool_arguments_and_trace(workspace):
     assert receipt['activity'] == [{'name': 'list_inventory', 'ok': True}]
     assert 'private' not in str(receipt)
     assert 'run_id' not in receipt
+
+
+def test_inventory_tool_reply_uses_food_names(workspace):
+    workspace.workflow.ingredient_name.return_value = 'Curry roux'
+    workspace.agent.return_value.handle.return_value = Result(True, {
+        'message': 'Results from the shared application service follow.',
+        'tool_results': [{
+            'name': 'list_inventory',
+            'result': {'ok': True, 'data': {'items': [{
+                'ingredient_id': 'curry_block', 'quantity': '92', 'unit': 'g',
+                'state': 'packaged', 'source': {'status': 'synthetic'},
+            }]}, 'error': None},
+        }],
+    })
+    receipt = workspace.submit('r1', '/inventory')
+    assert receipt['assistant'] == 'Curry roux: 92 g'
 
 
 def test_web_migrations_do_not_modify_frozen_core_manifest():

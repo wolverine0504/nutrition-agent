@@ -1,1 +1,28 @@
 :root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#172c28;background:#f4f7f4;font-size:15px}*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1380px;margin:auto}header{padding:40px 36px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}h1{font-size:36px;letter-spacing:-1.3px;margin:8px 0}h2{font-size:19px;margin:0}h3{font-size:17px;margin:10px 0}p{line-height:1.6;margin:8px 0}.eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:750;color:#417565}.badge{font-size:12px;border:1px solid #cbded3;background:#eaf4ed;border-radius:20px;padding:7px 12px;white-space:nowrap}main{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;padding:0 36px}.conversation,aside{border:1px solid #dce6df;background:white;border-radius:20px;padding:24px;min-width:0}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.muted{color:#677a73;font-size:13px}#messages{max-height:520px;min-height:240px;overflow:auto;margin:24px 0}.empty{padding:45px 12px;color:#677a73;text-align:center}.bubble{border-radius:14px;padding:15px 18px;margin:12px 0;background:#f2f6f3}.bubble.user{background:#e6f2ec;margin-left:40px}.bubble .speaker{font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:1px;color:#537465}.bubble pre{font-family:inherit;font-size:14px}.activity{font-size:12px;color:#677a73;margin-top:10px}pre{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;font-family:inherit;font-size:13px;margin:10px 0}details{border-top:1px solid #e2e9e4;padding:18px 0}summary{font-weight:650;cursor:pointer}label{display:block;font-size:12px;font-weight:650;margin:14px 0 7px}input,textarea{width:100%;font:inherit;padding:12px;border:1px solid #cfdcd3;border-radius:10px;background:#fcfdfb}textarea{resize:vertical}button{font:inherit;font-size:13px;font-weight:650;background:#21634e;color:white;border:1px solid transparent;border-radius:9px;padding:11px 15px;cursor:pointer}button.secondary{background:white;border-color:#d1ded6;color:#345c4e}button.danger{background:#a4413c}button:disabled{opacity:.5;cursor:wait}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #8bc7b0;outline-offset:2px}.quick-actions,.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.quick-actions{padding:15px 0;border-top:1px solid #e2e9e4}.review{border:1px solid #c8ddcd;background:#f4faf3;padding:18px;border-radius:12px;margin:15px 0}#status{font-size:13px;color:#677a73;flex:1}.actions{margin-top:12px}.presenter{margin-top:30px}footer{padding:26px 36px;color:#7b8b83;font-size:12px}@media(max-width:850px){main{grid-template-columns:1fr;padding:0 16px}header{padding:24px 16px;align-items:flex-start;flex-direction:column}h1{font-size:30px}.conversation,aside{padding:18px}.section-title{flex-wrap:wrap}footer{padding:22px 16px}}
+main{padding-bottom:36px}
+[hidden]{display:none!important}
+.activity{padding:8px 0 0}
+.activity summary{font-weight:550}
+.activity p{margin-bottom:0}
+.goal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.goal-card{background:#f4f8f4;border:1px solid #dce6df;border-radius:12px;padding:12px}
+.goal-card h3,.goal-card p{margin:0 0 4px}
+.goal-card h3{font-size:15px}
+.goal-card dl{margin:12px 0 0;font-size:13px}
+.goal-card dl div{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0 6px}
+.goal-card dd{font-weight:650;margin:0}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+#adjust-form{align-items:end}
+#adjust-form label{margin-top:0}
+#boxes{width:8rem}
+.table-scroll{overflow-x:auto;margin:14px 0}
+.review table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}
+.review caption{text-align:left;font-weight:650;margin-bottom:7px}
+.review th,.review td{border-bottom:1px solid #dce6df;padding:7px 10px 7px 0;white-space:nowrap}
+.review tbody th{font-weight:550}
+.cooking-steps{padding:10px 0 0}
+.cooking-steps ol{padding-left:24px}
+.cooking-steps li{margin-top:6px}
+#recalculate{margin-top:14px;padding:10px 0 0}
+button:disabled{cursor:not-allowed}
+@media(max-width:380px){.goal-grid{grid-template-columns:1fr}}
