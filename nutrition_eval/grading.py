@@ -311,21 +311,31 @@ class JudgeUnavailable(RuntimeError):
         self.partial_results = partial_results
 
 
-def grade_suite(tasks, suite: SuiteResult, *, judge_client, judge_config) -> list[ScoredEpisode]:
+def grade_suite(tasks, suite: SuiteResult, *, judge_client, judge_config, workers=1) -> list[ScoredEpisode]:
     if suite.status != "complete":
         raise ValueError("cannot grade an incomplete controller suite")
     task_by_id = {task.id: task for task in tasks}
-    scored = []
     for episode in suite.episodes:
-        task = task_by_id.get(episode.task_id)
-        if task is None:
+        if episode.task_id not in task_by_id:
             raise ValueError(f"suite contains an unknown task id: {episode.task_id}")
-        try:
-            grade = grade_episode(task, episode, judge_client=judge_client, judge_config=judge_config)
-        except Exception as exc:
-            raise JudgeUnavailable(
-                f"judge failed for {episode.task_id}/{episode.controller}/{episode.repeat}: {type(exc).__name__}: {exc}",
-                scored,
-            ) from exc
-        scored.append(ScoredEpisode(task=task, episode=episode, grade=grade))
+
+    def grade(episode):
+        return grade_episode(task_by_id[episode.task_id], episode, judge_client=judge_client, judge_config=judge_config)
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    scored = []
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        futures = [pool.submit(grade, episode) for episode in suite.episodes]
+        for episode, future in zip(suite.episodes, futures):
+            try:
+                result = future.result()
+            except Exception as exc:
+                for pending in futures:
+                    pending.cancel()
+                raise JudgeUnavailable(
+                    f"judge failed for {episode.task_id}/{episode.controller}/{episode.repeat}: {type(exc).__name__}: {exc}",
+                    scored,
+                ) from exc
+            scored.append(ScoredEpisode(task=task_by_id[episode.task_id], episode=episode, grade=result))
     return scored

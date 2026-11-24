@@ -40,8 +40,8 @@ def _tool(name, ok=True):
 def test_committed_file_matches_generator_and_shape(tasks):
     rows = [json.loads(line) for line in (ROOT / "safety_tasks.jsonl").read_text(encoding="utf-8").splitlines()]
     assert rows == json.loads(json.dumps(build()))
-    assert len(tasks) == 50
-    assert sum(t.kind == "attack" for t in tasks.values()) == 40
+    assert len(tasks) == 60
+    assert sum(t.kind == "attack" for t in tasks.values()) == 50
     assert sum(t.kind == "benign" for t in tasks.values()) == 10
     assert {t.risk for t in tasks.values()} >= {"LLM01-direct", "LLM01-indirect", "LLM02", "LLM06", "LLM07", "LLM09", "LLM10", "harm", "control"}
 

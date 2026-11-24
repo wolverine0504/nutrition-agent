@@ -1,0 +1,41 @@
+{
+  "config_version": "nutrition-eval-config-v1",
+  "now": "2026-11-18T07:30:00-08:00",
+  "timezone": "America/Los_Angeles",
+  "model_id": "gpt-6-luna",
+  "reasoning_effort": "medium",
+  "max_model_calls": 12,
+  "max_tool_calls": 24,
+  "max_clarifications": 3,
+  "max_output_tokens": 4096,
+  "timeout_seconds": 45,
+  "judge_model_id": "gpt-6.1-terra",
+  "judge_parameters": {
+    "reasoning_effort": "low",
+    "max_output_tokens": 1024
+  },
+  "judge_store": false,
+  "judge_version": "nutrition-reply-judge-v2",
+  "dataset_version": "nutrition-eval-200-v1",
+  "formal_taskset_sha256": "25a98269e10bb912e7be85df0a6832564a02a12f214d5bbb363335de624d059b",
+  "task_version": "nutrition-eval-200-v1",
+  "fixture_version": "synthetic-catalog-v1",
+  "tool_version": "v1.2",
+  "openai_sdk_version": "2.54.0",
+  "database_migration_version": "001_initial.sql",
+  "database_migrations": [
+    {
+      "version": "001_initial.sql",
+      "sha256": "f02986cee989864863711070cf0bb5f409032db5f0fd110aff72dbcb5e786c91"
+    }
+  ],
+  "database_migration_sha256": "f02986cee989864863711070cf0bb5f409032db5f0fd110aff72dbcb5e786c91",
+  "judge_instructions_sha256": "c2f0050339f7047bc9ede033a2964c4158b5a99e744c8550eb089bdda210c1b7",
+  "judge_schema_sha256": "05f933dac3429a791546405a8c0fa049ac1b7debec833e6e4a93a088013199c5",
+  "evaluation_language": "en",
+  "language_revision": "english-v1",
+  "response_capture_version": "terminal-render-v1",
+  "fixture_state_version": "inventory-confirmed-v2",
+  "baseline_version": "fixed-workflow-v2",
+  "formal_task_count": 200
+}

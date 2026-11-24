@@ -163,7 +163,7 @@ def _preflight(args):
             raise ValueError("Fake-client dry run requires 3–5 development tasks")
         database = None
     else:
-        validate_taskset(tasks, expected_count=50)
+        validate_taskset(tasks, expected_count=int(raw_config.get("formal_task_count", 50)))
         if task_hash != raw_config.get("formal_taskset_sha256"):
             raise ValueError("Formal taskset hash does not match eval_config.json; verify and freeze the version first")
         program_commit = os.environ.get("EVAL_PROGRAM_COMMIT", "")
@@ -172,6 +172,9 @@ def _preflight(args):
         database = _validate_test_database()
         if not os.environ.get("OPENAI_API_KEY"):
             raise ValueError("Formal evaluation requires OPENAI_API_KEY before controllers start")
+    from .runner import eval_workers
+
+    eval_workers()  # reject a bad EVAL_WORKERS before any paid call
     program_commit = os.environ.get("EVAL_PROGRAM_COMMIT") or None
     output_dir = Path(args.output)
     if output_dir.exists() and any(output_dir.iterdir()):
@@ -279,6 +282,8 @@ def _run_fake_dry_run(tasks, config):
 
 
 def main(argv=None) -> int:
+    from .runner import eval_workers
+
     args = _parser().parse_args(argv)
     try:
         raw_config, config, tasks, task_hash, database, output_dir, config_hash, program_commit = _preflight(args)
@@ -322,6 +327,7 @@ def main(argv=None) -> int:
         "model_service_host": urlsplit(os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1").hostname,
         "planned_controller_episodes": len(tasks) * 4,
         "planned_judge_calls": len(tasks) * 4,
+        "eval_workers": eval_workers(),
     }
     if database:
         metadata["database"] = database
@@ -348,7 +354,7 @@ def main(argv=None) -> int:
         timeout=config.timeout_seconds,
     )
     try:
-        results = grade_suite(tasks, suite, judge_client=client, judge_config=config)
+        results = grade_suite(tasks, suite, judge_client=client, judge_config=config, workers=eval_workers())
     except JudgeUnavailable as exc:
         incomplete = SuiteResult("incomplete", suite.episodes, str(exc))
         write_run_artifacts(output_dir, incomplete, exc.partial_results, None, metadata=metadata)

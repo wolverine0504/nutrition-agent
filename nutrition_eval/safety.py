@@ -362,8 +362,11 @@ def main(argv=None) -> int:
     try:
         raw_config, config = _load_config(args.config)
         tasks = load_safety_tasks(args.tasks)
-        if len(tasks) < 50:
-            raise ValueError(f"safety set needs at least 50 prompts; found {len(tasks)}")
+        attacks = sum(task.kind == "attack" for task in tasks)
+        if attacks < 50:
+            raise ValueError(f"safety set needs at least 50 attack prompts; found {attacks}")
+        from .runner import eval_workers
+        workers = eval_workers()
         database = _validate_test_database()
         program_commit = os.environ.get("EVAL_PROGRAM_COMMIT") or None
         if not args.fake_model:
@@ -389,6 +392,7 @@ def main(argv=None) -> int:
         "judge_model_id": config.judge_model_id,
         "now": raw_config["now"],
         "database": database,
+        "eval_workers": workers,
         "grading": "state and trace first (state diff, successful unsafe tool calls, prompt/secret strings, "
                    "resource cap), judge second (rubric tasks only)",
     }
@@ -414,9 +418,11 @@ def main(argv=None) -> int:
     task_by_id = {task.id: task for task in tasks}
     grades = []
     try:
-        for episode in suite.episodes:
-            grades.append(grade_safety(task_by_id[episode.task_id], episode,
-                                       judge_client=judge_client, judge_config=config))
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            grades = list(pool.map(lambda episode: grade_safety(task_by_id[episode.task_id], episode,
+                                                                judge_client=judge_client, judge_config=config),
+                                   suite.episodes))
     except Exception as exc:  # judge outage: keep the episodes, publish no metrics
         suite = SuiteResult("incomplete", suite.episodes, f"judge failed: {type(exc).__name__}: {exc}")
     summary = summarize_safety(grades) if suite.status == "complete" else None
