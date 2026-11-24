@@ -1,0 +1,15 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    env_file: .env
+    environment:
+      WEB_DATABASE_SCHEMA: web_demo_presentation
+      WEB_ENABLE_MODEL_CALLS: ${WEB_ENABLE_MODEL_CALLS:-false}
+      WEB_INTERACTION_CODE: ${WEB_INTERACTION_CODE:?Set a separate interaction code of at least 12 characters}
+      WEB_PRESENTER_CODE: ${WEB_PRESENTER_CODE:?Set a separate presenter code of at least 12 characters}
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      db:
+        condition: service_healthy

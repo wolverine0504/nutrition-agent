@@ -10,3 +10,6 @@ private
 backups
 tmp
 *.dump
+
+output
+results

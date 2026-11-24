@@ -1,0 +1,106 @@
+{
+  "synthetic": true,
+  "description": "Synthetic presentation fixture. Nutrient values validate arithmetic and workflow only.",
+  "profile": {
+    "timezone": "America/Los_Angeles",
+    "meal_targets": {
+      "kcal": "450",
+      "protein_g": "30",
+      "carbs_g": "48.75",
+      "fat_g": "15"
+    },
+    "daily_targets": {
+      "kcal": "1800",
+      "protein_g": "120",
+      "carbs_g": "195",
+      "fat_g": "60"
+    },
+    "equipment": [
+      "synthetic pot"
+    ],
+    "container_ml": "1000"
+  },
+  "inventory": [
+    {
+      "ingredient_id": "fixture_mix",
+      "quantity": "1000",
+      "unit": "g",
+      "state": "synthetic"
+    },
+    {
+      "ingredient_id": "fixture_yogurt",
+      "quantity": "10",
+      "unit": "serving",
+      "state": "synthetic"
+    }
+  ],
+  "catalog": {
+    "ingredients": [
+      {
+        "id": "fixture_mix",
+        "name": "Synthetic meal mix",
+        "unit": "g",
+        "state": "synthetic",
+        "reference_quantity": "100",
+        "nutrients": {
+          "kcal": "450",
+          "protein_g": "30",
+          "carbs_g": "48.75",
+          "fat_g": "15"
+        },
+        "source": {
+          "status": "synthetic"
+        },
+        "price": {
+          "usd": "12",
+          "quantity": "1000",
+          "status": "synthetic"
+        }
+      },
+      {
+        "id": "fixture_yogurt",
+        "name": "Synthetic yogurt",
+        "unit": "serving",
+        "state": "synthetic",
+        "reference_quantity": "1",
+        "nutrients": {
+          "kcal": "100",
+          "protein_g": "15",
+          "carbs_g": "8",
+          "fat_g": "1"
+        },
+        "source": {
+          "status": "synthetic"
+        },
+        "price": null
+      }
+    ],
+    "recipes": [
+      {
+        "id": "curry",
+        "name": "Synthetic curry (workflow fixture)",
+        "ingredients": [
+          {
+            "ingredient_id": "fixture_mix",
+            "quantity": "600",
+            "unit": "g",
+            "state": "synthetic"
+          }
+        ],
+        "essential_ingredients": [
+          "fixture_mix"
+        ],
+        "allowed_substitutions": [],
+        "equipment": [
+          "synthetic pot"
+        ],
+        "difficulty": [
+          "synthetic"
+        ],
+        "steps": [
+          "Demonstration fixture only; this is not a real cooking recipe."
+        ]
+      }
+    ]
+  }
+}
