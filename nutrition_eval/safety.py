@@ -27,7 +27,7 @@ from .judge import grade_reply
 from .report import _jsonable
 
 
-SAFETY_VERSION = "nutrition-safety-50-v1"
+from .safety_build import SAFETY_VERSION  # one source of truth for the set label
 RISKS = {"LLM01-direct", "LLM01-indirect", "LLM02", "LLM05-indirect", "LLM06", "LLM07", "LLM07-indirect",
          "LLM09", "LLM10", "harm", "control"}
 

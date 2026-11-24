@@ -1,0 +1,130 @@
+{
+  "episode_count": 800,
+  "error": null,
+  "metadata": {
+    "baseline_version": "fixed-workflow-v2",
+    "controller_limits": {
+      "max_clarifications": 3,
+      "max_model_calls": 12,
+      "max_output_tokens": 4096,
+      "max_tool_calls": 24,
+      "timeout_seconds": 45
+    },
+    "controller_model_id": "gpt-6-luna",
+    "controller_reasoning_effort": "medium",
+    "database": {
+      "dbname": "nutrition_test",
+      "host": "db_test"
+    },
+    "database_migration_version": "001_initial.sql",
+    "database_migrations": [
+      {
+        "sha256": "f02986cee989864863711070cf0bb5f409032db5f0fd110aff72dbcb5e786c91",
+        "version": "001_initial.sql"
+      }
+    ],
+    "dataset_version": "nutrition-eval-200-v1",
+    "eval_config_sha256": "f10323cbb0f900fbfaa5b4df492a4955079c138e549cb01c9cc9e13e615d77f8",
+    "eval_workers": 8,
+    "fixture_version": "synthetic-catalog-v1",
+    "frozen_eval_config": {
+      "baseline_version": "fixed-workflow-v2",
+      "config_version": "nutrition-eval-config-v1",
+      "database_migration_sha256": "f02986cee989864863711070cf0bb5f409032db5f0fd110aff72dbcb5e786c91",
+      "database_migration_version": "001_initial.sql",
+      "database_migrations": [
+        {
+          "sha256": "f02986cee989864863711070cf0bb5f409032db5f0fd110aff72dbcb5e786c91",
+          "version": "001_initial.sql"
+        }
+      ],
+      "dataset_version": "nutrition-eval-200-v1",
+      "evaluation_language": "en",
+      "fixture_state_version": "inventory-confirmed-v2",
+      "fixture_version": "synthetic-catalog-v1",
+      "formal_task_count": 200,
+      "formal_taskset_sha256": "25a98269e10bb912e7be85df0a6832564a02a12f214d5bbb363335de624d059b",
+      "judge_instructions_sha256": "c2f0050339f7047bc9ede033a2964c4158b5a99e744c8550eb089bdda210c1b7",
+      "judge_model_id": "gpt-6.1-terra",
+      "judge_parameters": {
+        "max_output_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "judge_schema_sha256": "05f933dac3429a791546405a8c0fa049ac1b7debec833e6e4a93a088013199c5",
+      "judge_store": false,
+      "judge_version": "nutrition-reply-judge-v2",
+      "language_revision": "english-v1",
+      "max_clarifications": 3,
+      "max_model_calls": 12,
+      "max_output_tokens": 4096,
+      "max_tool_calls": 24,
+      "model_id": "gpt-6-luna",
+      "now": "2026-11-18T07:30:00-08:00",
+      "openai_sdk_version": "2.54.0",
+      "reasoning_effort": "medium",
+      "response_capture_version": "terminal-render-v1",
+      "task_version": "nutrition-eval-200-v1",
+      "timeout_seconds": 45,
+      "timezone": "America/Los_Angeles",
+      "tool_version": "v1.2"
+    },
+    "judge_instructions": "You are an independent evaluator. Score only the listed response criteria using the provided fixture, conversation, controller reply, and actual final state.\nDo not invent facts. Do not use or infer hidden expected_changes or process order. For each numbered criterion return exactly one result with the same index, a boolean passed value, and a short reason. Return only the required JSON object.",
+    "judge_instructions_sha256": "c2f0050339f7047bc9ede033a2964c4158b5a99e744c8550eb089bdda210c1b7",
+    "judge_model_id": "gpt-6.1-terra",
+    "judge_parameters": {
+      "max_output_tokens": 1024,
+      "reasoning_effort": "low"
+    },
+    "judge_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "index": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "index",
+              "passed",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "criteria"
+      ],
+      "type": "object"
+    },
+    "judge_schema_sha256": "05f933dac3429a791546405a8c0fa049ac1b7debec833e6e4a93a088013199c5",
+    "judge_version": "nutrition-reply-judge-v2",
+    "model_service_host": "api.openai.com",
+    "openai_sdk_version": "2.54.0",
+    "planned_controller_episodes": 800,
+    "planned_judge_calls": 800,
+    "program_commit": "8917643aad87b8aa566067f0d3a815d7ebf628c1",
+    "response_capture_version": "terminal-render-v1",
+    "run_mode": "formal",
+    "source_tree_sha256": "8411ad98bd4c51b92e4579c0ddb944f142634c86aaa0bfac543b0c843f7a7855",
+    "task_count": 200,
+    "task_version": "nutrition-eval-200-v1",
+    "taskset_sha256": "25a98269e10bb912e7be85df0a6832564a02a12f214d5bbb363335de624d059b",
+    "tool_version": "v1.2"
+  },
+  "run_mode": "formal",
+  "scored_episode_count": 800,
+  "status": "complete"
+}
